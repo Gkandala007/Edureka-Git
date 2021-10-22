@@ -1,5 +1,3 @@
 Teaching Devops
 
 Good Morning World
-
-Thank you for taking this course
