@@ -4,3 +4,7 @@ Let's learn some advanced topics of Git
 
 Getting Deeper into Git
 Modifications before popping the stash
+==========================================
+
+Added for Stash Demonstration
+Kindly follow through
