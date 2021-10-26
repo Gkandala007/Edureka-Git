@@ -1,0 +1,1 @@
+Teaching Merging and Branching Technologies in Git
