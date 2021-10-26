@@ -1,0 +1,86 @@
+pipeline {
+    agent any
+
+    tools {
+        // Install the Maven version configured as "M3" and add it to the path.
+        maven "mymaven"
+        jdk "myjava"
+    }
+
+    stages {
+        stage('Compile') {
+            steps {
+                // Get some code from a GitHub repository
+                git 'https://github.com/Gkandala007/DevOpsClassCodes.git'
+
+                // Run Maven on a Unix agent.
+                sh "mvn compile"
+
+                // To run Maven on a Windows agent, use
+                // bat "mvn -Dmaven.test.failure.ignore=true clean package"
+            }
+
+        }
+        stage('Code Review') {
+      
+          steps {
+              
+              git 'https://github.com/Gkandala007/DevOpsClassCodes.git'
+              sh "mvn -P metrics pmd:pmd"
+          }
+          post {
+              
+              success {
+                  
+                recordIssues enabledForFailure: true, aggregatingResults: true, tool: pmdParser(pattern: 'target/pmd.xml')
+              }
+          }
+          
+      }
+        stage('test') {
+            
+            steps {
+               git 'https://github.com/Gkandala007/DevOpsClassCodes.git'
+               
+               sh "mvn test"
+        }
+        post {
+                // If Maven was able to run the tests, even if some of the test
+                // failed, record the test results and archive the jar file.
+                success {
+                    junit '**/target/surefire-reports/*.xml'
+                    archiveArtifacts 'target/surefire-reports/*.xml'
+                }
+            }
+
+      }
+      stage('Metric Job') {
+          
+          steps {
+              
+            git 'https://github.com/Gkandala007/DevOpsClassCodes.git'
+            
+            sh 'mvn cobertura:cobertura -Dcobertura.report.format=xml'
+          }
+          
+          post {
+              
+              always {
+              
+              step([$class: 'CoberturaPublisher', autoUpdateHealth: false, autoUpdateStability: false, coberturaReportFile: 'target/site/cobertura/coverage.xml', failUnhealthy: false, failUnstable: false, maxNumberOfBuilds: 0, onlyStable: false, sourceEncoding: 'ASCII', zoomCoverageChart: false])
+        }
+          }
+      }
+      
+      stage('Package') {
+          
+          steps {
+              
+            git 'https://github.com/Gkandala007/DevOpsClassCodes.git'
+            
+            sh 'mvn package'
+          }
+      }
+      
+      }
+}
