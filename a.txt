@@ -8,3 +8,4 @@ Modifications before popping the stash
 
 Added for Stash Demonstration
 Kindly follow through
+Updating a file from remote repo and pulling it via cli to make it sync
