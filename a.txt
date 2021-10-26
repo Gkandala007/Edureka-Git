@@ -1,3 +1,3 @@
-Teaching Devops
-
-Good Morning World
+Hello All
+Welcome to the world of Edureka
+Let's learn some advanced topics of Git
